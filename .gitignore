@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+/fluidic-cfd/solver
+/fluidic-cfd/solver-rebuilt
+/_site/
+/cfd-*.png

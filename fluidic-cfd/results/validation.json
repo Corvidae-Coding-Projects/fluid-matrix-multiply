@@ -1,0 +1,100 @@
+{
+  "matrix_nLs_per_Pa": [
+    [
+      3.27181198754,
+      1.3328206061,
+      0.391745921126,
+      1.89711835797
+    ],
+    [
+      0.371869016118,
+      3.23630852427,
+      1.40674878936,
+      0.396132722638
+    ],
+    [
+      1.2553654932,
+      0.374553342876,
+      3.22563226384,
+      1.33850148366
+    ],
+    [
+      0.387705824579,
+      1.2605515617,
+      0.376516706775,
+      3.28358494978
+    ]
+  ],
+  "checks": {
+    "mix-s1": {
+      "predicted_nLs": [
+        4.3671980314792,
+        2.1110480140572,
+        2.6023410746744,
+        2.8598395955662
+      ],
+      "computed_nLs": [
+        4.36642077184,
+        2.11057439329,
+        2.6017728949,
+        2.85917428827
+      ],
+      "relative_L2_superposition_error": 0.00020356513903180425,
+      "max_output_relative_error": 0.00023269210937200074
+    },
+    "signed-s1": {
+      "predicted_nLs": [
+        4.210499663028799,
+        1.5483484983132,
+        1.3120881691383999,
+        2.7092329128562
+      ],
+      "computed_nLs": [
+        4.20981450848,
+        1.54803175165,
+        1.31202547784,
+        2.70866964142
+      ],
+      "relative_L2_superposition_error": 0.00017474688598030974,
+      "max_output_relative_error": 0.00020795132325717632
+    }
+  },
+  "grid_refinement": {
+    "coarse_dx_um": 10,
+    "fine_dx_um": 5,
+    "relative_L2_change": 0.01770421472595489,
+    "per_output_relative_change": [
+      -0.017999549915709432,
+      -0.01776569612959723,
+      -0.018247376364728337,
+      -0.016480934230641984
+    ],
+    "note": "Two grids measure sensitivity, not a proven continuum error bound."
+  },
+  "square_duct": [
+    {
+      "scale": 1,
+      "analytical_nLs": 2.2849343144497745,
+      "computed_volumetric_nLs": 2.2861876174807554,
+      "relative_error": 0.0005485072472566355,
+      "converged": true
+    },
+    {
+      "scale": 2,
+      "analytical_nLs": 2.2669427361985255,
+      "computed_volumetric_nLs": 2.267347693443299,
+      "relative_error": 0.00017863585096655754,
+      "converged": true
+    }
+  ],
+  "zero_input_max_output_nLs": 0,
+  "all_device_runs_converged": true,
+  "maximum_device_mass_imbalance": 3.3373025157e-07,
+  "maximum_device_mach": 0.00230241029844,
+  "numerical_tolerances": {
+    "device_velocity_relative_change": 1e-06,
+    "duct_velocity_relative_change": 1e-08,
+    "consecutive_checks_required": 3,
+    "physical_check_interval_s": 0.002
+  }
+}

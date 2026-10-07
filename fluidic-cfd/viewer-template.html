@@ -1,0 +1,52 @@
+<style>
+#fluidic-cfd {position:relative;color:var(--foreground)}
+#fluidic-cfd .cfd-heading {padding-right:90px;margin-bottom:16px}
+#fluidic-cfd .cfd-stage {position:relative;min-width:0;height:410px;touch-action:none;cursor:grab}
+#fluidic-cfd .cfd-stage:active {cursor:grabbing}
+#fluidic-cfd canvas {display:block;width:100%;height:100%}
+#fluidic-cfd .cfd-label {position:absolute;pointer-events:none;white-space:nowrap;transform:translate(-50%,-50%);color:var(--foreground);background:var(--background)}
+#fluidic-cfd .cfd-key {display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+#fluidic-cfd .cfd-gradient {width:112px;height:8px;background:linear-gradient(to right,var(--muted),var(--viz-series-1))}
+#fluidic-cfd .cfd-numbers {display:flex;flex-wrap:wrap;gap:8px 24px;margin:14px 0}
+#fluidic-cfd .cfd-detail {min-height:24px;margin:8px 0}
+#fluidic-cfd .cfd-tables {display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px}
+#fluidic-cfd .cfd-tables > div {min-width:0}
+#fluidic-cfd .cfd-checks {display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-top:16px}
+#fluidic-cfd .cfd-check {display:flex;justify-content:space-between;gap:12px}
+#fluidic-cfd .cfd-status {margin:12px 0}
+#fluidic-cfd .cfd-row-label {font-weight:500}
+#fluidic-cfd .cfd-table-title {margin:0 0 8px}
+#fluidic-cfd .cfd-inputs {display:flex;flex-wrap:wrap;gap:8px 20px;margin:12px 0}
+#fluidic-cfd .cfd-inputs span {white-space:nowrap}
+#fluidic-cfd details {margin-top:16px}
+#fluidic-cfd summary {cursor:pointer}
+@media(max-width:600px){#fluidic-cfd .cfd-tables,#fluidic-cfd .cfd-checks{grid-template-columns:1fr}#fluidic-cfd .cfd-stage{height:340px}}
+</style>
+<div id="fluidic-cfd">
+  <div class="cfd-heading"><h2>Fluidic matrix multiplier</h2><span class="text-small text-muted">3D Navier–Stokes · computed steady fields</span></div>
+  <div class="viz-controls">
+    <label class="form-label">CFD run<select class="form-select" id="cfd-case"></select></label>
+    <label class="form-label">Field<select class="form-select" id="cfd-field"><option value="pressure">Pressure</option><option value="speed">Speed</option></select></label>
+  </div>
+  <div class="cfd-inputs tabular-nums" id="cfd-inputs" aria-live="polite"></div>
+  <div class="cfd-stage" id="cfd-stage" role="img" aria-label="Rotatable 3D channel network showing sampled CFD pressure or velocity. Four upper input manifolds connect through sixteen vertical channels to four lower output manifolds.">
+    <div id="cfd-webgl-error" role="alert" hidden>3D graphics are unavailable in this browser. Computed results are shown below.</div>
+  </div>
+  <div class="cfd-key text-small"><span id="cfd-low" class="tabular-nums"></span><span class="cfd-gradient" id="cfd-gradient"></span><span id="cfd-high" class="tabular-nums"></span><span class="text-muted" id="cfd-field-label">Pressure (Pa)</span><span class="text-muted">Drag to rotate · scroll to zoom</span></div>
+  <div class="viz-controls">
+    <label class="form-label">View<select class="form-select" id="cfd-view"><option value="oblique">3D</option><option value="top">Top</option><option value="side">Side</option></select></label>
+    <label class="form-label">Slice height <output id="cfd-slice-value" class="tabular-nums">All layers</output><input class="form-range" id="cfd-slice" type="range" min="40" max="480" step="10" value="480" aria-label="Show fluid below this height in micrometres"></label>
+  </div>
+  <label class="form-check"><input class="form-check-input" type="checkbox" id="cfd-vectors"><span class="form-check-label">Velocity arrows</span></label>
+  <div class="cfd-detail text-small tabular-nums" id="cfd-detail" aria-live="polite">Select a fluid sample to inspect its pressure and velocity.</div>
+  <div class="cfd-numbers text-small tabular-nums" id="cfd-stats"></div>
+  <div class="cfd-tables">
+    <div><h3 class="cfd-table-title">Calibrated 4×4 matrix</h3><div class="text-small text-muted">nL/s per Pa · 10 µm grid</div><table class="table table-sm tabular-nums" aria-label="Measured 4 by 4 pressure to flow transfer matrix"><thead><tr><th></th><th class="text-end">P1</th><th class="text-end">P2</th><th class="text-end">P3</th><th class="text-end">P4</th></tr></thead><tbody id="cfd-matrix"></tbody></table></div>
+    <div><h3 class="cfd-table-title">Output flow</h3><div class="text-small text-muted" id="cfd-output-note">nL/s · mass-equivalent flow</div><table class="table table-sm tabular-nums" aria-label="Predicted matrix output and separately computed fluid output"><thead><tr><th></th><th class="text-end">Matrix</th><th class="text-end">3D CFD</th><th class="text-end">Δ %</th></tr></thead><tbody id="cfd-output"></tbody></table></div>
+  </div>
+  <details><summary>Numerical checks &amp; geometry</summary><div class="cfd-checks text-small tabular-nums" id="cfd-checks"></div><h3>Connecting channel widths (µm)</h3><table class="table table-sm tabular-nums" aria-label="Square connecting channel widths in micrometres"><thead><tr><th></th><th class="text-end">P1</th><th class="text-end">P2</th><th class="text-end">P3</th><th class="text-end">P4</th></tr></thead><tbody id="cfd-widths"></tbody></table></details>
+  <div class="cfd-status text-small text-muted" id="cfd-status"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<!-- CFD_DATA -->
+<!-- CFD_SCRIPT -->

@@ -1,0 +1,42 @@
+name: Deploy interactive viewer
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Verify packaged source and results
+        run: python3 fluidic-cfd/verify-package.py
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare standalone viewer
+        run: |
+          mkdir -p _site
+          cp fluidic-cfd/fluidic-matrix-multiplier-3d.html _site/index.html
+          cp fluidic-cfd/vendor/THREE-LICENSE.txt _site/THREE-LICENSE.txt
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
