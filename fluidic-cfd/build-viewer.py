@@ -1,6 +1,6 @@
-"""Build offline standalone HTML and an optional inline fragment from computed fields."""
+"""Build standalone and preview HTML, plus an optional inline fragment, from computed fields."""
 from pathlib import Path
-import argparse,base64,gzip
+import argparse,base64,gzip,html
 
 ROOT=Path(__file__).resolve().parent
 p=argparse.ArgumentParser();p.add_argument('--inline',type=Path);a=p.parse_args()
@@ -18,5 +18,6 @@ if a.inline:
 offline=fragment
 shell=(ROOT/'standalone-template.html').read_text().replace('/* CFD_STYLES */',(ROOT/'vendor/visualize.css').read_text()).replace('<!-- CFD_FRAGMENT -->',offline)
 (ROOT/'fluidic-matrix-multiplier-3d.html').write_text(shell)
+(ROOT/'preview.html').write_text((ROOT/'preview-template.html').read_text().replace('__CFD_FRAGMENT_HTML_ATTRIBUTE__',html.escape(fragment,quote=True)))
 print('Standalone viewer:',ROOT/'fluidic-matrix-multiplier-3d.html')
 if a.inline:print('Inline fragment:',a.inline)

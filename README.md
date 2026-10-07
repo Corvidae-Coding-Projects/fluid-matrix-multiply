@@ -14,7 +14,7 @@ The complete source, validation results, and volume data are in
 instructions](fluidic-cfd/README.md) for the model, limitations, numerical checks,
 and how to run a new experiment locally.
 
-To verify the original package:
+To verify the bundled source and results:
 
 ```sh
 cd fluidic-cfd

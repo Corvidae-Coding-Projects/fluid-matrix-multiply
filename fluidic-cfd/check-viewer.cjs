@@ -17,7 +17,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  if(initial===changed)throw Error('Case selector did not update the computed flows');
  await frame.locator('#cfd-field').selectOption('speed');
  if(!await frame.locator('#cfd-field-label').innerText().then(x=>x.includes('mm/s')))throw Error('Field selector failed');
- await frame.locator('#cfd-vectors').check();
+ const beforeArrows=await frame.locator('canvas').first().screenshot();
+ await frame.getByRole('button',{name:'Velocity arrows',exact:true}).click();
+ if(await frame.locator('#cfd-vectors').getAttribute('aria-pressed')!=='true')throw Error('Velocity arrows did not turn on');
+ if(beforeArrows.equals(await frame.locator('canvas').first().screenshot()))throw Error('Velocity arrows did not change the rendered field');
  await frame.locator('#cfd-slice').fill('200');
  await frame.locator('#cfd-slice').dispatchEvent('input');
  if(await frame.locator('#cfd-slice-value').innerText()!=='200 µm')throw Error('Slice control failed');
@@ -39,6 +42,20 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  await offline.locator('#fluidic-cfd[data-ready=true]').waitFor();
  if(!await offline.locator('#cfd-webgl-error').isHidden())throw Error('Offline WebGL failed');
  await offline.screenshot({path:'../cfd-offline.png',fullPage:true});
- console.log(JSON.stringify({errors,hostResourceFailures,overflow,computedFlowUpdated:true,sliceUpdated:true,offlineLoaded:true},null,2));
+ // Native menu options must have an explicit readable background in both themes.
+ for(const theme of ['light','dark']){
+  await offline.emulateMedia({colorScheme:theme});
+  const menus=await offline.locator('#fluidic-cfd option').evaluateAll(options=>{
+   const rgba=color=>color.match(/[\d.]+/g).map(Number);
+   const luminance=rgb=>rgb.slice(0,3).map(x=>{x/=255;return x<=.04045?x/12.92:((x+.055)/1.055)**2.4;}).reduce((sum,x,i)=>sum+x*[.2126,.7152,.0722][i],0);
+   return options.map(el=>{const style=getComputedStyle(el),fg=rgba(style.color),bg=rgba(style.backgroundColor),a=luminance(fg),b=luminance(bg);return {label:el.textContent,opaque:(bg[3]??1)===1,contrast:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};});
+  });
+  if(!menus.length||menus.some(option=>!option.opaque||option.contrast<4.5))throw Error('Unreadable '+theme+' menu options: '+JSON.stringify(menus));
+ }
+ await offline.getByRole('button',{name:'Velocity arrows',exact:true}).press('Space');
+ if(await offline.locator('#cfd-vectors').getAttribute('aria-pressed')!=='true')throw Error('Keyboard velocity toggle failed');
+ await offline.getByRole('button',{name:'Velocity arrows',exact:true}).click();
+ if(await offline.locator('#cfd-vectors').getAttribute('aria-pressed')!=='false')throw Error('Velocity arrows did not turn off');
+ console.log(JSON.stringify({errors,hostResourceFailures,overflow,computedFlowUpdated:true,sliceUpdated:true,velocityArrowsRendered:true,menuContrast:true,offlineLoaded:true},null,2));
  await browser.close();if(errors.length)process.exitCode=1;
 })();

@@ -162,6 +162,8 @@ within the measured linearity and discretization errors.
 - `results/mix-s2.vti`: complete fine-grid field for ParaView. Threshold
   `fluid_mask` at 1, then color by pressure or velocity. Coordinates are µm.
 - `viewer-template.html`, `viewer.js`, `build-viewer.py`: interactive viewer sources.
+- `preview-template.html`: preview wrapper; the build uses the same viewer fragment
+  for the standalone and preview pages.
 - `vendor/three.min.js`: Three.js 0.160.0, MIT licensed.
 
 Both viewers bundle Three.js 0.160.0 (retrieved from its version-pinned CDN) and

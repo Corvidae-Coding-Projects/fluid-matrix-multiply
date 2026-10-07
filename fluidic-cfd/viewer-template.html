@@ -20,6 +20,11 @@
 #fluidic-cfd .cfd-inputs span {white-space:nowrap}
 #fluidic-cfd details {margin-top:16px}
 #fluidic-cfd summary {cursor:pointer}
+#fluidic-cfd select, #fluidic-cfd option {color:#1a1c1f;background-color:#fff;color-scheme:light}
+#fluidic-cfd .cfd-vectors-toggle {min-height:44px;margin:8px 0;padding:8px 16px;border:1px solid currentColor;border-radius:8px;color:var(--foreground);background:var(--background);font:inherit;font-weight:600;cursor:pointer}
+#fluidic-cfd .cfd-vectors-toggle[aria-pressed="true"] {color:#fff;background:#1760a5;border-color:#1760a5}
+#fluidic-cfd .cfd-vectors-toggle:focus-visible {outline:3px solid #6fa8e3;outline-offset:3px}
+@media(prefers-color-scheme:dark){#fluidic-cfd select,#fluidic-cfd option{color:#f5f5f5;background-color:#242424;color-scheme:dark}}
 @media(max-width:600px){#fluidic-cfd .cfd-tables,#fluidic-cfd .cfd-checks{grid-template-columns:1fr}#fluidic-cfd .cfd-stage{height:340px}}
 </style>
 <div id="fluidic-cfd">
@@ -37,7 +42,7 @@
     <label class="form-label">View<select class="form-select" id="cfd-view"><option value="oblique">3D</option><option value="top">Top</option><option value="side">Side</option></select></label>
     <label class="form-label">Slice height <output id="cfd-slice-value" class="tabular-nums">All layers</output><input class="form-range" id="cfd-slice" type="range" min="40" max="480" step="10" value="480" aria-label="Show fluid below this height in micrometres"></label>
   </div>
-  <label class="form-check"><input class="form-check-input" type="checkbox" id="cfd-vectors"><span class="form-check-label">Velocity arrows</span></label>
+  <button class="cfd-vectors-toggle" id="cfd-vectors" type="button" aria-label="Velocity arrows" aria-pressed="false">Velocity arrows: Off</button>
   <div class="cfd-detail text-small tabular-nums" id="cfd-detail" aria-live="polite">Select a fluid sample to inspect its pressure and velocity.</div>
   <div class="cfd-numbers text-small tabular-nums" id="cfd-stats"></div>
   <div class="cfd-tables">

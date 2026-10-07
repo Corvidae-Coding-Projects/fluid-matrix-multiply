@@ -1,10 +1,6 @@
 {
   "errors": [],
-  "hostResourceFailures": [
-    "https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js",
-    "https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js",
-    "https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"
-  ],
+  "hostResourceFailures": [],
   "overflow": {
     "body": 320,
     "width": 320,
@@ -12,5 +8,7 @@
   },
   "computedFlowUpdated": true,
   "sliceUpdated": true,
+  "velocityArrowsRendered": true,
+  "menuContrast": true,
   "offlineLoaded": true
 }
